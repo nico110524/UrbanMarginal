@@ -45,5 +45,10 @@ public class JeuServeur extends Jeu {
 	 */
 	public void constructionMurs() {
 	}
-	
+	/**
+	 * Génération de joueurs
+	 */
+	public void créeationJoueurs() {
+		
+	}
 }
