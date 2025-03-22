@@ -27,7 +27,6 @@ public class JeuClient extends Jeu {
 
 	@Override
 	public void deconnexion() {
-		// TODO Auto-generated method stub
 		
 	}
 
