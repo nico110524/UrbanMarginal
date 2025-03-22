@@ -1,163 +1,990 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:Codegen="http://www.eclipse.org/papyrus/Codegen/1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:Codegen="http://www.eclipse.org/papyrus/Codegen/1" xmlns:PapyrusJava="http://www.eclipse.org/papyrus/PapyrusJava/1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:standard="http://www.eclipse.org/uml2/5.0.0/UML/Profile/Standard" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML">
   <uml:Model xmi:id="_u0luEAXVEfCjiOtTORCvwQ" name="UrbanMarginal">
     <packageImport xmi:type="uml:PackageImport" xmi:id="_u5bx0AXVEfCjiOtTORCvwQ">
       <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
     </packageImport>
     <packagedElement xmi:type="uml:Package" xmi:id="_55F9UAXVEfCjiOtTORCvwQ" name="UrbanMarginal">
-      <packagedElement xmi:type="uml:Class" xmi:id="_55NSEAXVEfCjiOtTORCvwQ" name="Boule" visibility="public">
-        <generalization xmi:type="uml:Generalization" xmi:id="_55PHQQXVEfCjiOtTORCvwQ" general="_55PHQAXVEfCjiOtTORCvwQ"/>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_55QVYAXVEfCjiOtTORCvwQ" name="jeuServeur" visibility="private" type="_55PuUAXVEfCjiOtTORCvwQ" isUnique="false"/>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55atcAXVEfCjiOtTORCvwQ" name="Boule" specification="_55QVYQXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
+      <packagedElement xmi:type="uml:Package" xmi:id="_w8G2EAdHEfCgTrTzVGdCxw" name="outils">
+        <packagedElement xmi:type="uml:Package" xmi:id="_w8HdIAdHEfCgTrTzVGdCxw" name="connexion">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_w8J5YAdHEfCgTrTzVGdCxw" name="AsyncResponse" visibility="public">
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w8WtsAdHEfCgTrTzVGdCxw" name="reception" visibility="private">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w8ZJ8AdHEfCgTrTzVGdCxw" name="connection" type="_w8LHgAdHEfCgTrTzVGdCxw"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w8eCcAdHEfCgTrTzVGdCxw" name="ordre" type="_56mZMAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w8epgAdHEfCgTrTzVGdCxw" name="info" type="_w8MVoAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w8LHgAdHEfCgTrTzVGdCxw" name="Connection" visibility="public">
+            <generalization xmi:type="uml:Generalization" xmi:id="_w8sE4AdHEfCgTrTzVGdCxw" general="_w8nMYAdHEfCgTrTzVGdCxw"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_w8w9YAdHEfCgTrTzVGdCxw" name="in" visibility="private" type="_w8tTAAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_w80nwAdHEfCgTrTzVGdCxw" name="out" visibility="private" type="_w8xkcAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_w81O0AdHEfCgTrTzVGdCxw" name="delegate" visibility="private" type="_w8J5YAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_w89xsAdHEfCgTrTzVGdCxw" name="Connection" specification="_w84SIAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.delegate = delegate;&#xD;
+    // création du canal de sortie pour envoyer des informations&#xD;
+    try {&#xD;
+        this.out = new ObjectOutputStream(socket.getOutputStream());&#xD;
+    } catch (IOException e) {&#xD;
+        System.out.println(&quot;erreur création canal out : &quot; + e);&#xD;
+        System.exit(0);&#xD;
+    }&#xD;
+    // création du canal d'entrée pour recevoir des informations&#xD;
+    try {&#xD;
+        this.in = new ObjectInputStream(socket.getInputStream());&#xD;
+    } catch (IOException e) {&#xD;
+        System.out.println(&quot;erreur création canal in : &quot; + e);&#xD;
+        System.exit(0);&#xD;
+    }&#xD;
+    // démarrage du thread d'écoute (attente d'un message de l'ordi distant)&#xD;
+    this.start();&#xD;
+    // envoi de l'instance de connexion vers la classe qui implémente AsyncResponse pour récupérer la réponse&#xD;
+    this.delegate.reception(this, &quot;connexion&quot;, null);&#xD;
 </body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55eX0AXVEfCjiOtTORCvwQ" name="tireBoule" specification="_55dwwAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_w9FtgAdHEfCgTrTzVGdCxw" name="envoi" specification="_w8_m4AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    // l'envoi ne peut se faire que si un objet delegate existe (pour récupérer la réponse)&#xD;
+    if (delegate != null) {&#xD;
+        try {&#xD;
+            this.out.reset();&#xD;
+            out.writeObject(unObjet);&#xD;
+            out.flush();&#xD;
+        } catch (IOException e) {&#xD;
+            System.out.println(&quot;erreur d'envoi sur le canal out : &quot; + e);&#xD;
+        }&#xD;
+    }&#xD;
 </body>
-        </ownedBehavior>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55QVYQXVEfCjiOtTORCvwQ" name="Boule" visibility="public" method="_55atcAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55dwwAXVEfCjiOtTORCvwQ" name="tireBoule" visibility="public" method="_55eX0AXVEfCjiOtTORCvwQ"/>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_w9GUkQdHEfCgTrTzVGdCxw" name="run" specification="_w9GUkAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    // permet de savoir s'il faut continuer à écouter&#xD;
+    boolean inOk = true;&#xD;
+    // objet qui va récupérer l'information reçue&#xD;
+    Object reception;&#xD;
+    // boucle tant qu'il faut écouter&#xD;
+    while (inOk) {&#xD;
+        try {&#xD;
+            // réception d'un objet sur le canal d'entrée&#xD;
+            reception = in.readObject();&#xD;
+            // envoi de l'information reçue vers la classe qui implémente AsyncResponse pour récupérer la réponse&#xD;
+            delegate.reception(this, &quot;reception&quot;, reception);&#xD;
+        } catch (ClassNotFoundException e) {&#xD;
+            System.out.println(&quot;erreur de classe sur réception : &quot; + e);&#xD;
+            System.exit(0);&#xD;
+        } catch (IOException e) {&#xD;
+            delegate.reception(this, &quot;deconnexion&quot;, null);&#xD;
+            inOk = false;&#xD;
+            System.out.println(&quot;l'ordinateur distant est déconnecté&quot;);&#xD;
+            try {&#xD;
+                in.close();&#xD;
+            } catch (IOException e1) {&#xD;
+                System.out.println(&quot;la fermeture du canal d'entrée a échoué : &quot; + e);&#xD;
+            }&#xD;
+        }&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w84SIAdHEfCgTrTzVGdCxw" name="Connection" visibility="public" method="_w89xsAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w878gAdHEfCgTrTzVGdCxw" name="socket" type="_w8114QdHEfCgTrTzVGdCxw"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w88jkAdHEfCgTrTzVGdCxw" name="delegate" type="_w8J5YAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w8_m4AdHEfCgTrTzVGdCxw" name="envoi" visibility="public" method="_w9FtgAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w9EfYAdHEfCgTrTzVGdCxw" name="unObjet" type="_w8MVoAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w9GUkAdHEfCgTrTzVGdCxw" name="run" visibility="public" method="_w9GUkQdHEfCgTrTzVGdCxw"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w9Iw0AdHEfCgTrTzVGdCxw" name="ClientSocket" visibility="public">
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_w9evEAdHEfCgTrTzVGdCxw" name="ClientSocket" specification="_w9Z2kAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    try {&#xD;
+        Socket socket = new Socket(ip, port);&#xD;
+        System.out.println(&quot;connexion serveur réussie&quot;);&#xD;
+        // la connexion ne peut se faire que si un objet delegate existe (pour récupérer la réponse)&#xD;
+        if (delegate != null) {&#xD;
+            // création d'une connexion pour ce client, pour la communication avec le serveur (envoi et réception d'informations)&#xD;
+            new Connection(socket, delegate);&#xD;
+        }&#xD;
+    } catch (UnknownHostException e) {&#xD;
+        JOptionPane.showMessageDialog(null, &quot;serveur non disponible&quot;);&#xD;
+    } catch (IOException e) {&#xD;
+        JOptionPane.showMessageDialog(null, &quot;IP incorrecte&quot;);&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w9Z2kAdHEfCgTrTzVGdCxw" name="ClientSocket" visibility="public" method="_w9evEAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w9c54AdHEfCgTrTzVGdCxw" name="delegate" type="_w8J5YAdHEfCgTrTzVGdCxw"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w9dg8AdHEfCgTrTzVGdCxw" name="ip" type="_56mZMAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w9eIAAdHEfCgTrTzVGdCxw" name="port" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w9gkQAdHEfCgTrTzVGdCxw" name="ServeurSocket" visibility="public">
+            <generalization xmi:type="uml:Generalization" xmi:id="_w9hLUAdHEfCgTrTzVGdCxw" general="_w8nMYAdHEfCgTrTzVGdCxw"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_w9k1sAdHEfCgTrTzVGdCxw" name="serverSocket" visibility="private" type="_w9hyYAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_w9lcwAdHEfCgTrTzVGdCxw" name="delegate" visibility="private" type="_w8J5YAdHEfCgTrTzVGdCxw" isUnique="false">
+              <defaultValue xmi:type="uml:OpaqueExpression" xmi:id="_w9mD0AdHEfCgTrTzVGdCxw" name="defaultValue">
+                <language>JAVA</language>
+                <body>null</body>
+              </defaultValue>
+            </ownedAttribute>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_w9qVQAdHEfCgTrTzVGdCxw" name="ServeurSocket" specification="_w9mq4AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    // création du socket serveur d'écoute des clients&#xD;
+    try {&#xD;
+        this.delegate = delegate;&#xD;
+        this.serverSocket = new ServerSocket(port);&#xD;
+        // le démarrage de l'écoute ne peut se faire que si un objet delegate existe (pour récupérer la réponse)&#xD;
+        if (delegate != null) {&#xD;
+            this.start();&#xD;
+        }&#xD;
+    } catch (IOException e) {&#xD;
+        System.out.println(&quot;erreur grave cr�ation socket serveur : &quot; + e);&#xD;
+        System.exit(0);&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_w9rjYAdHEfCgTrTzVGdCxw" name="run" specification="_w9q8UAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    // objet qui va r�cup�rer le socket du client qui s'est connect�&#xD;
+    Socket socket;&#xD;
+    // boucle infinie pour attendre un nouveau client&#xD;
+    while (true) {&#xD;
+        try {&#xD;
+            // attente d'une connexion&#xD;
+            System.out.println(&quot;le serveur attend&quot;);&#xD;
+            socket = serverSocket.accept();&#xD;
+            System.out.println(&quot;un client s'est connect�&quot;);&#xD;
+            // cr�ation d'une connexion vers ce client, pour la communication (envoi et r�ception d'informations)&#xD;
+            new Connection(socket, delegate);&#xD;
+        } catch (IOException e) {&#xD;
+            System.out.println(&quot;erreur sur l'objet serverSocket : &quot; + e);&#xD;
+            System.exit(0);&#xD;
+        }&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w9mq4AdHEfCgTrTzVGdCxw" name="ServeurSocket" visibility="public" method="_w9qVQAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w9pHIAdHEfCgTrTzVGdCxw" name="delegate" type="_w8J5YAdHEfCgTrTzVGdCxw"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_w9puMAdHEfCgTrTzVGdCxw" name="port" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_w9q8UAdHEfCgTrTzVGdCxw" name="run" visibility="public" method="_w9rjYAdHEfCgTrTzVGdCxw"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_1TgUIAdHEfCgTrTzVGdCxw" name="son">
+          <packagedElement xmi:type="uml:Class" xmi:id="_1TiJUAdHEfCgTrTzVGdCxw" name="Duree" visibility="public">
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1Tu9oAdHEfCgTrTzVGdCxw" name="microsecondes" visibility="private" type="_1TuWkAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1TvksAdHEfCgTrTzVGdCxw" name="heure" visibility="private" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1TwLwAdHEfCgTrTzVGdCxw" name="minute" visibility="private" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1TwLwQdHEfCgTrTzVGdCxw" name="seconde" visibility="private" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1Twy0AdHEfCgTrTzVGdCxw" name="microseconde" visibility="private" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_1TshYAdHEfCgTrTzVGdCxw" name="Duree implements Serializable" client="_1TiJUAdHEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1T0dMAdHEfCgTrTzVGdCxw" name="Duree" specification="_1Twy0QdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1T6j0AdHEfCgTrTzVGdCxw" name="Duree" specification="_1T1rUAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.microsecondes = microsecondes;&#xD;
+    long temps = this.microsecondes;&#xD;
+    this.microseconde = (int) (temps % 1000000L);&#xD;
+    temps = temps / 1000000L;&#xD;
+    this.seconde = (int) (temps % 60L);&#xD;
+    temps = temps / 60L;&#xD;
+    this.minute = (int) (temps % 60L);&#xD;
+    temps = temps / 60L;&#xD;
+    this.heure = (int) temps;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1T-1QAdHEfCgTrTzVGdCxw" name="Duree" specification="_1T7x8AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    if (microseconde &lt; 0) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre de microsecondes ne peut pas �tre n�gative&quot;);&#xD;
+    }&#xD;
+    if (microseconde > 999999) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre de microsecondes ne peut pas �tre plus de 999999, sinon on a des secondes&quot;);&#xD;
+    }&#xD;
+    this.microseconde = microseconde;&#xD;
+    this.microsecondes = (long) this.microseconde;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UEU0AdHEfCgTrTzVGdCxw" name="Duree" specification="_1UADYAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this(microseconde);&#xD;
+    if (seconde &lt; 0) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre de secondes ne peut pas �tre n�gative&quot;);&#xD;
+    }&#xD;
+    if (seconde > 59) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre de secondes ne peut pas �tre plus de 59, sinon on a des minutes&quot;);&#xD;
+    }&#xD;
+    this.seconde = seconde;&#xD;
+    this.microsecondes += 1000000L * (long) this.seconde;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UH_MAdHEfCgTrTzVGdCxw" name="Duree" specification="_1UEU0QdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this(seconde, microseconde);&#xD;
+    if (minute &lt; 0) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre de minutes ne peut pas �tre n�gative&quot;);&#xD;
+    }&#xD;
+    if (minute > 59) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre minutes ne peut pas �tre plus de 59, sinon on a des heures&quot;);&#xD;
+    }&#xD;
+    this.minute = minute;&#xD;
+    this.microsecondes += 60L * 1000000L * (long) this.minute;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UOF0AdHEfCgTrTzVGdCxw" name="Duree" specification="_1UJNUAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this(minute, seconde, microseconde);&#xD;
+    if (heure &lt; 0) {&#xD;
+        throw new IllegalArgumentException(&quot;Le nombre d'heure ne peut pas �tre n�gative&quot;);&#xD;
+    }&#xD;
+    this.heure = heure;&#xD;
+    this.microsecondes += 60L * 60L * 1000000L * (long) this.heure;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1URwMQdHEfCgTrTzVGdCxw" name="Duree" specification="_1UPT8AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.microsecondes = duree.microsecondes;&#xD;
+    this.microseconde = duree.microseconde;&#xD;
+    this.seconde = duree.seconde;&#xD;
+    this.minute = duree.minute;&#xD;
+    this.heure = duree.heure;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UVakAdHEfCgTrTzVGdCxw" name="enMicrosecondes" specification="_1US-UAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.microsecondes;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UXPwAdHEfCgTrTzVGdCxw" name="enMillisecondes" specification="_1UWosAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.microsecondes / 1000L;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UYd4QdHEfCgTrTzVGdCxw" name="getMicroseconde" specification="_1UX20AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.microseconde;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UaTEAdHEfCgTrTzVGdCxw" name="getMilliseconde" specification="_1UZE8AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.microseconde / 1000;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UbhMQdHEfCgTrTzVGdCxw" name="getSeconde" specification="_1Ua6IAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.seconde;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1UcIQgdHEfCgTrTzVGdCxw" name="getMinute" specification="_1UcIQAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.minute;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Ud9cAdHEfCgTrTzVGdCxw" name="getHeure" specification="_1UcvUAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.heure;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Twy0QdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1T0dMAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1T1rUAdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1T6j0AdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1T58wAdHEfCgTrTzVGdCxw" name="microsecondes" type="_1TuWkAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1T7x8AdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1T-1QAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1T-OMAdHEfCgTrTzVGdCxw" name="microseconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UADYAdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1UEU0AdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UDGsAdHEfCgTrTzVGdCxw" name="seconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UDtwAdHEfCgTrTzVGdCxw" name="microseconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UEU0QdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1UH_MAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UGxEAdHEfCgTrTzVGdCxw" name="minute" type="_56edYAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UHYIAdHEfCgTrTzVGdCxw" name="seconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UHYIQdHEfCgTrTzVGdCxw" name="microseconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UJNUAdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1UOF0AdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1ULpkAdHEfCgTrTzVGdCxw" name="heure" type="_56edYAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UM3sAdHEfCgTrTzVGdCxw" name="minute" type="_56edYAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UNewAdHEfCgTrTzVGdCxw" name="seconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UNewQdHEfCgTrTzVGdCxw" name="microseconde" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UPT8AdHEfCgTrTzVGdCxw" name="Duree" visibility="public" method="_1URwMQdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1URwMAdHEfCgTrTzVGdCxw" name="duree" type="_1TiJUAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1US-UAdHEfCgTrTzVGdCxw" name="enMicrosecondes" visibility="public" method="_1UVakAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UUMcAdHEfCgTrTzVGdCxw" type="_1TuWkAdHEfCgTrTzVGdCxw" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UWosAdHEfCgTrTzVGdCxw" name="enMillisecondes" visibility="public" method="_1UXPwAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UWosQdHEfCgTrTzVGdCxw" type="_1TuWkAdHEfCgTrTzVGdCxw" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UX20AdHEfCgTrTzVGdCxw" name="getMicroseconde" visibility="public" method="_1UYd4QdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UYd4AdHEfCgTrTzVGdCxw" type="_56edYAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UZE8AdHEfCgTrTzVGdCxw" name="getMilliseconde" visibility="public" method="_1UaTEAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UZsAAdHEfCgTrTzVGdCxw" type="_56edYAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Ua6IAdHEfCgTrTzVGdCxw" name="getSeconde" visibility="public" method="_1UbhMQdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UbhMAdHEfCgTrTzVGdCxw" type="_56edYAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UcIQAdHEfCgTrTzVGdCxw" name="getMinute" visibility="public" method="_1UcIQgdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UcIQQdHEfCgTrTzVGdCxw" type="_56edYAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1UcvUAdHEfCgTrTzVGdCxw" name="getHeure" visibility="public" method="_1Ud9cAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1UdWYAdHEfCgTrTzVGdCxw" type="_56edYAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_1UnucAdHEfCgTrTzVGdCxw" name="Sound" visibility="public">
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1Ut1EAdHEfCgTrTzVGdCxw" name="duree" visibility="private" type="_1TiJUAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1Uw4YAdHEfCgTrTzVGdCxw" name="lecteurAudio" visibility="private" type="_1UvDMAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U1J0AdHEfCgTrTzVGdCxw" name="formatFichier" visibility="private" type="_1UxfcAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U4NIAdHEfCgTrTzVGdCxw" name="format" visibility="private" type="_1U2X8AdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U7QcAdHEfCgTrTzVGdCxw" name="clip" visibility="private" type="_1U40MAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U73gAdHEfCgTrTzVGdCxw" name="thread" visibility="private" type="_w8nMYAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U8ekAdHEfCgTrTzVGdCxw" name="tour" visibility="private" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U9FoAdHEfCgTrTzVGdCxw" name="pause" visibility="private" type="_57E6UAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1U9FoQdHEfCgTrTzVGdCxw" name="fermerALaFin" visibility="private" type="_57E6UAXVEfCjiOtTORCvwQ" isUnique="false"/>
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1VAwAAdHEfCgTrTzVGdCxw" name="ecouteurs" visibility="private" type="_1U-TwQdHEfCgTrTzVGdCxw" isUnique="false">
+              <defaultValue xmi:type="uml:OpaqueExpression" xmi:id="_1VBXEAdHEfCgTrTzVGdCxw" name="defaultValue">
+                <language>JAVA</language>
+                <body>new Vector()</body>
+              </defaultValue>
+            </ownedAttribute>
+            <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_1Uo8kAdHEfCgTrTzVGdCxw" name="Sound implements Serializable" client="_1UnucAdHEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+            <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_1UtOAAdHEfCgTrTzVGdCxw" name="Sound implements Runnable" client="_1UnucAdHEfCgTrTzVGdCxw" supplier="_1UqKsAdHEfCgTrTzVGdCxw" contract="_1UqKsAdHEfCgTrTzVGdCxw"/>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VHdsAdHEfCgTrTzVGdCxw" name="Sound" specification="_1VDzUAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.initialise(url);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VOycAdHEfCgTrTzVGdCxw" name="Sound" specification="_1VLIEAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    if (!fichier.exists()) {&#xD;
+        throw new SonIntrouvableException(fichier);&#xD;
+    }&#xD;
+    this.initialise(fichier);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VQnoAdHEfCgTrTzVGdCxw" name="initialise" specification="_1VPZgAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    try {&#xD;
+        //Cr�e le flux&#xD;
+        this.lecteurAudio = AudioSystem.getAudioInputStream(fichier);&#xD;
+        //R�cup�re le format du fichier son&#xD;
+        this.formatFichier = AudioSystem.getAudioFileFormat(fichier);&#xD;
+        //R�cup�re le format de codage du son&#xD;
+        this.format = lecteurAudio.getFormat();&#xD;
+        //On ne peut pas ouvrir directement des format ALAW/ULA, il faut les convertir en PCM&#xD;
+        if ((this.format.getEncoding() == AudioFormat.Encoding.ULAW) || (this.format.getEncoding() == AudioFormat.Encoding.ALAW)) {&#xD;
+            //convertion du format&#xD;
+            AudioFormat tmp = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, this.format.getSampleRate(), this.format.getSampleSizeInBits() * 2, this.format.getChannels(), this.format.getFrameSize() * 2, this.format.getFrameRate(), true);&#xD;
+            //convertion du flux&#xD;
+            this.lecteurAudio = AudioSystem.getAudioInputStream(tmp, this.lecteurAudio);&#xD;
+            //On a convertit le format, si bien qu'il change&#xD;
+            this.format = tmp;&#xD;
+        }&#xD;
+        //On cr�e une information avec le format du flux et en caculant la logueneur totale du son&#xD;
+        DataLine.Info info = new DataLine.Info(Clip.class, this.lecteurAudio.getFormat(), ((int) this.lecteurAudio.getFrameLength() * this.format.getFrameSize()));&#xD;
+        //Grac � cette information, on peut creer un clip&#xD;
+        this.clip = (Clip) AudioSystem.getLine(info);&#xD;
+        //On ouvre le son&#xD;
+        reouvrir();&#xD;
+    } catch (UnsupportedAudioFileException uafe) {&#xD;
+        throw new SonTypeException();&#xD;
+    } catch (IOException ioe) {&#xD;
+        throw new SonErreurLecture();&#xD;
+    } catch (Exception e) {&#xD;
+        throw new SonErreurDiverse(e);&#xD;
+    }&#xD;
+    //On calcul la dur�e du son en microseconde&#xD;
+    this.duree = new Duree(this.longueurSonMicroseconde());&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VTD4AdHEfCgTrTzVGdCxw" name="initialise" specification="_1VROsAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    try {&#xD;
+        //Cr�e le flux&#xD;
+        this.lecteurAudio = AudioSystem.getAudioInputStream(url);&#xD;
+        //R�cup�re le format du fichier son&#xD;
+        this.formatFichier = AudioSystem.getAudioFileFormat(url);&#xD;
+        //R�cup�re le format de codage du son&#xD;
+        this.format = lecteurAudio.getFormat();&#xD;
+        //On ne peut pas ouvrir directement des format ALAW/ULA, il faut les convertir en PCM&#xD;
+        if ((this.format.getEncoding() == AudioFormat.Encoding.ULAW) || (this.format.getEncoding() == AudioFormat.Encoding.ALAW)) {&#xD;
+            //convertion du format&#xD;
+            AudioFormat tmp = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, this.format.getSampleRate(), this.format.getSampleSizeInBits() * 2, this.format.getChannels(), this.format.getFrameSize() * 2, this.format.getFrameRate(), true);&#xD;
+            //convertion du flux&#xD;
+            this.lecteurAudio = AudioSystem.getAudioInputStream(tmp, this.lecteurAudio);&#xD;
+            //On a convertit le format, si bien qu'il change&#xD;
+            this.format = tmp;&#xD;
+        }&#xD;
+        //On cr�e une information avec le format du flux et en caculant la logueneur totale du son&#xD;
+        DataLine.Info info = new DataLine.Info(Clip.class, this.lecteurAudio.getFormat(), ((int) this.lecteurAudio.getFrameLength() * this.format.getFrameSize()));&#xD;
+        //Grac � cette information, on peut creer un clip&#xD;
+        this.clip = (Clip) AudioSystem.getLine(info);&#xD;
+        //On ouvre le son&#xD;
+        reouvrir();&#xD;
+    } catch (UnsupportedAudioFileException uafe) {&#xD;
+        throw new SonTypeException();&#xD;
+    } catch (IOException ioe) {&#xD;
+        throw new SonErreurLecture();&#xD;
+    } catch (Exception e) {&#xD;
+        throw new SonErreurDiverse(e);&#xD;
+    }&#xD;
+    //On calcul la dur�e du son en microseconde&#xD;
+    this.duree = new Duree(this.longueurSonMicroseconde());&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VUSAQdHEfCgTrTzVGdCxw" name="jouer" specification="_1VUSAAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    //Si le son n'est pas initialiser, on l'initialise&#xD;
+    if (this.thread == null) {&#xD;
+        this.thread = new Thread(this);&#xD;
+        this.thread.start();&#xD;
+    }&#xD;
+    //On va le jouer une fois&#xD;
+    this.tour = 1;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VVgIAdHEfCgTrTzVGdCxw" name="boucle" specification="_1VU5EAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    //Si le son n'est pas initialiser, on l'initialise&#xD;
+    if (this.thread == null) {&#xD;
+        this.thread = new Thread(this);&#xD;
+        this.thread.start();&#xD;
+    }&#xD;
+    //On va le jouer nbFois fois&#xD;
+    this.tour = nbFois;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VWHMQdHEfCgTrTzVGdCxw" name="boucle" specification="_1VWHMAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.boucle(Integer.MAX_VALUE);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VXVUAdHEfCgTrTzVGdCxw" name="run" specification="_1VWuQAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    //Tant que le son est vivant&#xD;
+    while (this.thread != null) {&#xD;
+        //Pause de 0.123 seconde&#xD;
+        try {&#xD;
+            this.thread.sleep(123);&#xD;
+        } catch (Exception e) {&#xD;
+        }&#xD;
+        //Si on doit jouer le son au moins une fois&#xD;
+        if (this.tour > 0) {&#xD;
+            //On lance le son&#xD;
+            this.clip.start();&#xD;
+            //pause de 0.099 seconde (le son est jouer pendant ce temps)&#xD;
+            try {&#xD;
+                this.thread.sleep(99);&#xD;
+            } catch (Exception e) {&#xD;
+            }&#xD;
+            //Tant que le son n'est pas terminer ou que l'on soit en pause et est vivant&#xD;
+            while ((this.clip.isActive() || this.pause) &amp;&amp; (this.thread != null)) {&#xD;
+                //Si on est pas en pause, on avance sur le son&#xD;
+                if (!this.pause) {&#xD;
+                    this.avancer();&#xD;
+                }&#xD;
+                //Pause de 0.099 seconde&#xD;
+                try {&#xD;
+                    this.thread.sleep(99);&#xD;
+                } catch (Exception e) {&#xD;
+                    break;&#xD;
+                }&#xD;
+            }&#xD;
+            //Arr�te le son&#xD;
+            this.clip.stop();&#xD;
+            //On se place au d�but du son&#xD;
+            this.placeMicroseconde(0);&#xD;
+            //On � un tour de moins � jouer&#xD;
+            this.tour--;&#xD;
+            if (this.tour &lt; 1) {&#xD;
+                //Si on a fini de jouer, on tremine&#xD;
+                this.terminer();&#xD;
+                //Si on doit fermer � la fin, on ferme d�finitivement le son&#xD;
+                if (this.fermerALaFin) {&#xD;
+                    this.fermer();&#xD;
+                }&#xD;
+            }&#xD;
+        }&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Va_sAdHEfCgTrTzVGdCxw" name="reouvrir" specification="_1VX8YAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.clip.open(this.lecteurAudio);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VbmwQdHEfCgTrTzVGdCxw" name="pause" specification="_1VbmwAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    //Si on est pas d�j� en pause, on se met en pause&#xD;
+    if (!this.pause) {&#xD;
+        this.clip.stop();&#xD;
+        this.pause = true;&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VcN0QdHEfCgTrTzVGdCxw" name="reprise" specification="_1VcN0AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    //Si on est en pause, on enl�ve la pause&#xD;
+    if (this.pause) {&#xD;
+        pause = false;&#xD;
+        this.clip.start();&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vc04QdHEfCgTrTzVGdCxw" name="stop" specification="_1Vc04AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.clip.stop();&#xD;
+    this.placeMicroseconde(0);&#xD;
+    this.pause = false;&#xD;
+    this.tour = 0;&#xD;
+    this.thread = null;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vdb8AdHEfCgTrTzVGdCxw" name="fermer" specification="_1Vc04gdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.stop();&#xD;
+    this.clip.close();&#xD;
+    this.clip = null;&#xD;
+    this.duree = null;&#xD;
+    this.ecouteurs.clear();&#xD;
+    this.ecouteurs = null;&#xD;
+    this.format = null;&#xD;
+    this.formatFichier = null;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vdb8wdHEfCgTrTzVGdCxw" name="estFermerALaFin" specification="_1Vdb8QdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return fermerALaFin;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VeDAgdHEfCgTrTzVGdCxw" name="setFermerALaFin" specification="_1VeDAAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.fermerALaFin = fermer;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VeDBQdHEfCgTrTzVGdCxw" name="longueurSonMicroseconde" specification="_1VeDAwdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.clip.getMicrosecondLength();&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VeqEgdHEfCgTrTzVGdCxw" name="getRenduMicroseconde" specification="_1VeqEAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.clip.getMicrosecondPosition();&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VfRIgdHEfCgTrTzVGdCxw" name="getRendu" specification="_1VfRIAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return new Duree(this.getRenduMicroseconde());&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VgfQQdHEfCgTrTzVGdCxw" name="placeMicroseconde" specification="_1Vf4MAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.clip.setMicrosecondPosition(microseconde);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VhtYQdHEfCgTrTzVGdCxw" name="placeDuree" specification="_1VhGUAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.placeMicroseconde(duree.getMicroseconde());&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vi7gQdHEfCgTrTzVGdCxw" name="placeDepart" specification="_1Vi7gAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.clip.setMicrosecondPosition(0);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VjikgdHEfCgTrTzVGdCxw" name="estEnPause" specification="_1VjikAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.pause;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VkwsAdHEfCgTrTzVGdCxw" name="estEntrainDeJouer" specification="_1VkJoAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return !this.pause &amp;&amp; (this.tour > 0);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vl-0AdHEfCgTrTzVGdCxw" name="ajouteEcouteurSon" specification="_1VlXwgdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    if (ecouteur != null) {&#xD;
+        this.ecouteurs.addElement(ecouteur);&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vn0AAdHEfCgTrTzVGdCxw" name="retireEcouteurSon" specification="_1Vml4AdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    if (ecouteur != null) {&#xD;
+        this.ecouteurs.removeElement(ecouteur);&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VpCIAdHEfCgTrTzVGdCxw" name="terminer" specification="_1VobEAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    Thread t = new Thread() {&#xD;
+&#xD;
+        public void run() {&#xD;
+            Sound.this.terminer1();&#xD;
+        }&#xD;
+    };&#xD;
+    t.start();&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VqQQAdHEfCgTrTzVGdCxw" name="terminer1" specification="_1VppMAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    int nb = this.ecouteurs.size();&#xD;
+    for (int i = 0; i &lt; nb; i++) {&#xD;
+        EcouteurSon ecouteur = (EcouteurSon) this.ecouteurs.elementAt(i);&#xD;
+        ecouteur.sonTermine(this);&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1Vq3UQdHEfCgTrTzVGdCxw" name="avancer" specification="_1Vq3UAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    Thread t = new Thread() {&#xD;
+&#xD;
+        public void run() {&#xD;
+            Sound.this.avancer1();&#xD;
+        }&#xD;
+    };&#xD;
+    t.start();&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VreYAdHEfCgTrTzVGdCxw" name="avancer1" specification="_1Vq3UgdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    int nb = this.ecouteurs.size();&#xD;
+    for (int i = 0; i &lt; nb; i++) {&#xD;
+        EcouteurSon ecouteur = (EcouteurSon) this.ecouteurs.elementAt(i);&#xD;
+        ecouteur.sonChangePosition(this);&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1VssgAdHEfCgTrTzVGdCxw" name="getDuree" specification="_1VsFcAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    return this.duree;&#xD;
+</body>
+            </ownedBehavior>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VDzUAdHEfCgTrTzVGdCxw" name="Sound" visibility="public" method="_1VHdsAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VGPkAdHEfCgTrTzVGdCxw" name="url" type="_1VBXEQdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VLIEAdHEfCgTrTzVGdCxw" name="Sound" visibility="public" method="_1VOycAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VNkUAdHEfCgTrTzVGdCxw" name="fichier" type="_1VIEwAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VPZgAdHEfCgTrTzVGdCxw" name="initialise" visibility="private" method="_1VQnoAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VQAkAdHEfCgTrTzVGdCxw" name="fichier" type="_1VIEwAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VROsAdHEfCgTrTzVGdCxw" name="initialise" visibility="private" method="_1VTD4AdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VSc0AdHEfCgTrTzVGdCxw" name="url" type="_1VBXEQdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VUSAAdHEfCgTrTzVGdCxw" name="jouer" visibility="public" method="_1VUSAQdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VU5EAdHEfCgTrTzVGdCxw" name="boucle" visibility="public" method="_1VVgIAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VU5EQdHEfCgTrTzVGdCxw" name="nbFois" type="_56edYAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VWHMAdHEfCgTrTzVGdCxw" name="boucle" visibility="public" method="_1VWHMQdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VWuQAdHEfCgTrTzVGdCxw" name="run" visibility="public" method="_1VXVUAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VX8YAdHEfCgTrTzVGdCxw" name="reouvrir" visibility="private" method="_1Va_sAdHEfCgTrTzVGdCxw" raisedException="_1VYjcAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VbmwAdHEfCgTrTzVGdCxw" name="pause" visibility="public" method="_1VbmwQdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VcN0AdHEfCgTrTzVGdCxw" name="reprise" visibility="public" method="_1VcN0QdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vc04AdHEfCgTrTzVGdCxw" name="stop" visibility="public" method="_1Vc04QdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vc04gdHEfCgTrTzVGdCxw" name="fermer" visibility="public" method="_1Vdb8AdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vdb8QdHEfCgTrTzVGdCxw" name="estFermerALaFin" visibility="public" method="_1Vdb8wdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1Vdb8gdHEfCgTrTzVGdCxw" type="_57E6UAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VeDAAdHEfCgTrTzVGdCxw" name="setFermerALaFin" visibility="public" method="_1VeDAgdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VeDAQdHEfCgTrTzVGdCxw" name="fermer" type="_57E6UAXVEfCjiOtTORCvwQ"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VeDAwdHEfCgTrTzVGdCxw" name="longueurSonMicroseconde" visibility="public" method="_1VeDBQdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VeDBAdHEfCgTrTzVGdCxw" type="_1TuWkAdHEfCgTrTzVGdCxw" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VeqEAdHEfCgTrTzVGdCxw" name="getRenduMicroseconde" visibility="public" method="_1VeqEgdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VeqEQdHEfCgTrTzVGdCxw" type="_1TuWkAdHEfCgTrTzVGdCxw" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VfRIAdHEfCgTrTzVGdCxw" name="getRendu" visibility="public" method="_1VfRIgdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VfRIQdHEfCgTrTzVGdCxw" type="_1TiJUAdHEfCgTrTzVGdCxw" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vf4MAdHEfCgTrTzVGdCxw" name="placeMicroseconde" visibility="public" method="_1VgfQQdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VgfQAdHEfCgTrTzVGdCxw" name="microseconde" type="_1TuWkAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VhGUAdHEfCgTrTzVGdCxw" name="placeDuree" visibility="public" method="_1VhtYQdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VhtYAdHEfCgTrTzVGdCxw" name="duree" type="_1TiJUAdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vi7gAdHEfCgTrTzVGdCxw" name="placeDepart" visibility="public" method="_1Vi7gQdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VjikAdHEfCgTrTzVGdCxw" name="estEnPause" visibility="public" method="_1VjikgdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VjikQdHEfCgTrTzVGdCxw" type="_57E6UAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VkJoAdHEfCgTrTzVGdCxw" name="estEntrainDeJouer" visibility="public" method="_1VkwsAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VkJoQdHEfCgTrTzVGdCxw" type="_57E6UAXVEfCjiOtTORCvwQ" direction="return"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VlXwgdHEfCgTrTzVGdCxw" name="ajouteEcouteurSon" visibility="public" method="_1Vl-0AdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VlXwwdHEfCgTrTzVGdCxw" name="ecouteur"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vml4AdHEfCgTrTzVGdCxw" name="retireEcouteurSon" visibility="public" method="_1Vn0AAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VnM8AdHEfCgTrTzVGdCxw" name="ecouteur"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VobEAdHEfCgTrTzVGdCxw" name="terminer" visibility="private" method="_1VpCIAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VppMAdHEfCgTrTzVGdCxw" name="terminer1" visibility="private" method="_1VqQQAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vq3UAdHEfCgTrTzVGdCxw" name="avancer" visibility="private" method="_1Vq3UQdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1Vq3UgdHEfCgTrTzVGdCxw" name="avancer1" visibility="private" method="_1VreYAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VsFcAdHEfCgTrTzVGdCxw" name="getDuree" visibility="public" method="_1VssgAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1VsFcQdHEfCgTrTzVGdCxw" type="_1TiJUAdHEfCgTrTzVGdCxw" direction="return"/>
+            </ownedOperation>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Package" xmi:id="_1VG2oAdHEfCgTrTzVGdCxw" name="exceptions">
+            <packagedElement xmi:type="uml:Class" xmi:id="_fWL2UAdJEfCgTrTzVGdCxw" name="SonErreurLecture" visibility="public">
+              <generalization xmi:type="uml:Generalization" xmi:id="_fWMdYQdJEfCgTrTzVGdCxw" general="_fWMdYAdJEfCgTrTzVGdCxw"/>
+              <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_fWMdYgdJEfCgTrTzVGdCxw" name="SonErreurLecture implements Serializable" client="_fWL2UAdJEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWTyIAdJEfCgTrTzVGdCxw" name="SonErreurLecture" specification="_fWNEcAdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(&quot;Erreur lors de la lecture du son&quot;);&#xD;
+</body>
+              </ownedBehavior>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWNEcAdJEfCgTrTzVGdCxw" name="SonErreurLecture" visibility="public" method="_fWTyIAdJEfCgTrTzVGdCxw"/>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_fWMdYAdJEfCgTrTzVGdCxw" name="SonException" visibility="public">
+              <generalization xmi:type="uml:Generalization" xmi:id="_fWXcgAdJEfCgTrTzVGdCxw" general="_1VYjcAdHEfCgTrTzVGdCxw"/>
+              <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_fWYDkAdJEfCgTrTzVGdCxw" name="SonException implements Serializable" client="_fWMdYAdJEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWZ4wQdJEfCgTrTzVGdCxw" name="SonException" specification="_fWYqoAdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(message);&#xD;
+</body>
+              </ownedBehavior>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWYqoAdJEfCgTrTzVGdCxw" name="SonException" visibility="public" method="_fWZ4wQdJEfCgTrTzVGdCxw">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_fWZ4wAdJEfCgTrTzVGdCxw" name="message" type="_56mZMAXVEfCjiOtTORCvwQ"/>
+              </ownedOperation>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_fWbt8AdJEfCgTrTzVGdCxw" name="SonIntrouvableException" visibility="public">
+              <generalization xmi:type="uml:Generalization" xmi:id="_fWcVAAdJEfCgTrTzVGdCxw" general="_fWMdYAdJEfCgTrTzVGdCxw"/>
+              <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_fWc8EAdJEfCgTrTzVGdCxw" name="SonIntrouvableException implements Serializable" client="_fWbt8AdJEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWgmcAdJEfCgTrTzVGdCxw" name="SonIntrouvableException" specification="_fWdjIAdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(&quot;Le fichier &quot; + fichier.getAbsolutePath() + &quot; est introuvable&quot;);&#xD;
+</body>
+              </ownedBehavior>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWjpwAdJEfCgTrTzVGdCxw" name="SonIntrouvableException" specification="_fWhNgAdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(&quot;L'URL : &quot; + url.getFile() + &quot; est introuvable&quot;);&#xD;
+</body>
+              </ownedBehavior>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWn7MAdJEfCgTrTzVGdCxw" name="SonIntrouvableException" specification="_fWk34AdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(&quot;Le son : &quot; + nom + &quot; est introuvable&quot;);&#xD;
+</body>
+              </ownedBehavior>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWdjIAdJEfCgTrTzVGdCxw" name="SonIntrouvableException" visibility="public" method="_fWgmcAdJEfCgTrTzVGdCxw">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_fWf_YAdJEfCgTrTzVGdCxw" name="fichier" type="_1VIEwAdHEfCgTrTzVGdCxw"/>
+              </ownedOperation>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWhNgAdJEfCgTrTzVGdCxw" name="SonIntrouvableException" visibility="public" method="_fWjpwAdJEfCgTrTzVGdCxw">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_fWjCsAdJEfCgTrTzVGdCxw" name="url" type="_1VBXEQdHEfCgTrTzVGdCxw"/>
+              </ownedOperation>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWk34AdJEfCgTrTzVGdCxw" name="SonIntrouvableException" visibility="public" method="_fWn7MAdJEfCgTrTzVGdCxw">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_fWnUIAdJEfCgTrTzVGdCxw" name="nom" type="_56mZMAXVEfCjiOtTORCvwQ"/>
+              </ownedOperation>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_fWpJUAdJEfCgTrTzVGdCxw" name="SonErreurDiverse" visibility="public">
+              <generalization xmi:type="uml:Generalization" xmi:id="_fWpwYAdJEfCgTrTzVGdCxw" general="_fWMdYAdJEfCgTrTzVGdCxw"/>
+              <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_fWqXcAdJEfCgTrTzVGdCxw" name="SonErreurDiverse implements Serializable" client="_fWpJUAdJEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWszsQdJEfCgTrTzVGdCxw" name="SonErreurDiverse" specification="_fWq-gAdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(&quot;Une erreur s'est produite lors de l'analyse du son : &quot; + e.getMessage());&#xD;
+</body>
+              </ownedBehavior>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWq-gAdJEfCgTrTzVGdCxw" name="SonErreurDiverse" visibility="public" method="_fWszsQdJEfCgTrTzVGdCxw">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_fWszsAdJEfCgTrTzVGdCxw" name="e" type="_1VYjcAdHEfCgTrTzVGdCxw"/>
+              </ownedOperation>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_fWuB0AdJEfCgTrTzVGdCxw" name="SonTypeException" visibility="public">
+              <generalization xmi:type="uml:Generalization" xmi:id="_fWuo4AdJEfCgTrTzVGdCxw" general="_fWMdYAdJEfCgTrTzVGdCxw"/>
+              <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_fWvP8AdJEfCgTrTzVGdCxw" name="SonTypeException implements Serializable" client="_fWuB0AdJEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+              <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_fWxsMAdJEfCgTrTzVGdCxw" name="SonTypeException" specification="_fWv3AAdJEfCgTrTzVGdCxw">
+                <language>JAVA</language>
+                <body>&#xD;
+    super(&quot;Le type du son n'est pas reconnu&quot;);&#xD;
+</body>
+              </ownedBehavior>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_fWv3AAdJEfCgTrTzVGdCxw" name="SonTypeException" visibility="public" method="_fWxsMAdJEfCgTrTzVGdCxw"/>
+            </packagedElement>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Package" xmi:id="_1VlXwAdHEfCgTrTzVGdCxw" name="ecouteurs">
+            <packagedElement xmi:type="uml:Interface" xmi:id="_egrKoAdJEfCgTrTzVGdCxw" name="EcouteurSon" visibility="public">
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_egx4UAdJEfCgTrTzVGdCxw" name="sonTermine" visibility="public">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_egx4UQdJEfCgTrTzVGdCxw" name="son" type="_1UnucAdHEfCgTrTzVGdCxw"/>
+              </ownedOperation>
+              <ownedOperation xmi:type="uml:Operation" xmi:id="_egyfYAdJEfCgTrTzVGdCxw" name="sonChangePosition" visibility="public">
+                <ownedParameter xmi:type="uml:Parameter" xmi:id="_egyfYQdJEfCgTrTzVGdCxw" name="son" type="_1UnucAdHEfCgTrTzVGdCxw"/>
+              </ownedOperation>
+            </packagedElement>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_1VuhsAdHEfCgTrTzVGdCxw" name="Son" visibility="public">
+            <ownedAttribute xmi:type="uml:Property" xmi:id="_1VwW4AdHEfCgTrTzVGdCxw" name="sound" visibility="private" type="_1UnucAdHEfCgTrTzVGdCxw" isUnique="false"/>
+            <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="_1Vvv0AdHEfCgTrTzVGdCxw" name="Son implements Serializable" client="_1VuhsAdHEfCgTrTzVGdCxw" supplier="_1TiwYAdHEfCgTrTzVGdCxw" contract="_1TiwYAdHEfCgTrTzVGdCxw"/>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1V1PYAdHEfCgTrTzVGdCxw" name="Son" specification="_1VxlAAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    try {&#xD;
+        //            this.sound = new Sound(new File(nomfic));&#xD;
+        this.sound = new Sound(nomfic);&#xD;
+    } catch (SonException ex) {&#xD;
+    }&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1V2dgAdHEfCgTrTzVGdCxw" name="play" specification="_1V12cAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.sound.boucle(1);&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1V3EkQdHEfCgTrTzVGdCxw" name="close" specification="_1V3EkAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    this.sound.fermer();&#xD;
+</body>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_1V4SsQdHEfCgTrTzVGdCxw" name="playContinue" specification="_1V4SsAdHEfCgTrTzVGdCxw">
+              <language>JAVA</language>
+              <body>&#xD;
+    sound.boucle();&#xD;
+</body>
+            </ownedBehavior>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1VxlAAdHEfCgTrTzVGdCxw" name="Son" visibility="public" method="_1V1PYAdHEfCgTrTzVGdCxw">
+              <ownedParameter xmi:type="uml:Parameter" xmi:id="_1V0oUAdHEfCgTrTzVGdCxw" name="nomfic" type="_1VBXEQdHEfCgTrTzVGdCxw"/>
+            </ownedOperation>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1V12cAdHEfCgTrTzVGdCxw" name="play" visibility="public" method="_1V2dgAdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1V3EkAdHEfCgTrTzVGdCxw" name="close" visibility="public" method="_1V3EkQdHEfCgTrTzVGdCxw"/>
+            <ownedOperation xmi:type="uml:Operation" xmi:id="_1V4SsAdHEfCgTrTzVGdCxw" name="playContinue" visibility="public" method="_1V4SsQdHEfCgTrTzVGdCxw"/>
+          </packagedElement>
+        </packagedElement>
       </packagedElement>
-      <packagedElement xmi:type="uml:Class" xmi:id="_55PHQAXVEfCjiOtTORCvwQ" name="Objet" visibility="public" isAbstract="true">
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_57aRgAXVEfCjiOtTORCvwQ" name="posX" visibility="protected" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_57cGsAXVEfCjiOtTORCvwQ" name="posY" visibility="protected" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_57gYIAXVEfCjiOtTORCvwQ" name="toucheObjet" specification="_57d74AXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-    return null;&#xD;
-</body>
-        </ownedBehavior>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_57d74AXVEfCjiOtTORCvwQ" name="toucheObjet" visibility="public" method="_57gYIAXVEfCjiOtTORCvwQ">
-          <ownedParameter xmi:type="uml:Parameter" xmi:id="_57ei8AXVEfCjiOtTORCvwQ" type="_57E6UAXVEfCjiOtTORCvwQ" direction="return"/>
-          <ownedParameter xmi:type="uml:Parameter" xmi:id="_57fxEAXVEfCjiOtTORCvwQ" name="objet" type="_55PHQAXVEfCjiOtTORCvwQ"/>
-        </ownedOperation>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_56dPQAXVEfCjiOtTORCvwQ" name="importedTypes">
+      <packagedElement xmi:type="uml:Package" xmi:id="_56d2UAXVEfCjiOtTORCvwQ" name="primitivetype">
+        <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_56edYAXVEfCjiOtTORCvwQ" name="Integer"/>
+        <packagedElement xmi:type="uml:Class" xmi:id="_57E6UAXVEfCjiOtTORCvwQ" name="Boolean"/>
+        <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_1TuWkAdHEfCgTrTzVGdCxw" name="Long"/>
       </packagedElement>
-      <packagedElement xmi:type="uml:Class" xmi:id="_55PuUAXVEfCjiOtTORCvwQ" name="JeuServeur" visibility="public">
-        <generalization xmi:type="uml:Generalization" xmi:id="_55-HEAXVEfCjiOtTORCvwQ" general="_55gNAAXVEfCjiOtTORCvwQ"/>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_55_8QAXVEfCjiOtTORCvwQ" name="lesMurs" visibility="private" type="_55_VMAXVEfCjiOtTORCvwQ" isUnique="false">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_56BKYAXVEfCjiOtTORCvwQ"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_56BxcAXVEfCjiOtTORCvwQ" value="*"/>
-          <defaultValue xmi:type="uml:OpaqueExpression" xmi:id="_56CYgAXVEfCjiOtTORCvwQ" name="defaultValue">
-            <language>JAVA</language>
-            <body>new ArrayList&lt;Mur>()</body>
-          </defaultValue>
-        </ownedAttribute>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_56ENsAXVEfCjiOtTORCvwQ" name="lesJoueurs" visibility="private" type="_56DmoAXVEfCjiOtTORCvwQ" isUnique="false">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_56Fb0AXVEfCjiOtTORCvwQ"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_56Fb0QXVEfCjiOtTORCvwQ" value="*"/>
-          <defaultValue xmi:type="uml:OpaqueExpression" xmi:id="_56Fb0gXVEfCjiOtTORCvwQ" name="defaultValue">
-            <language>JAVA</language>
-            <body>new ArrayList&lt;Joueur>()</body>
-          </defaultValue>
-        </ownedAttribute>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_ATAqQgcqEfCWwJ_C7-phrQ" name="joueur" type="_56DmoAXVEfCjiOtTORCvwQ" association="_AS_cIAcqEfCWwJ_C7-phrQ">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ATBRUAcqEfCWwJ_C7-phrQ"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ATBRUQcqEfCWwJ_C7-phrQ" value="1"/>
-        </ownedAttribute>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_DbOYYgcqEfCWwJ_C7-phrQ" name="mur" type="_55_VMAXVEfCjiOtTORCvwQ" association="_DbNxUAcqEfCWwJ_C7-phrQ">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DbOYYwcqEfCWwJ_C7-phrQ"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DbOYZAcqEfCWwJ_C7-phrQ" value="1"/>
-        </ownedAttribute>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56JGMAXVEfCjiOtTORCvwQ" name="JeuServeur" specification="_56Fb0wXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56LicAXVEfCjiOtTORCvwQ" name="connexion" specification="_56KUUAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56NXoAXVEfCjiOtTORCvwQ" name="reception" specification="_56MwkAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56PM0AXVEfCjiOtTORCvwQ" name="deconnexion" specification="_56OlwAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56SQIAXVEfCjiOtTORCvwQ" name="envoi" specification="_56RpEAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56UsYAXVEfCjiOtTORCvwQ" name="constructionMurs" specification="_56UFUAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56YWwAXVEfCjiOtTORCvwQ" name="créeationJoueurs" specification="_56WhkAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56Fb0wXVEfCjiOtTORCvwQ" name="JeuServeur" visibility="public" method="_56JGMAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56KUUAXVEfCjiOtTORCvwQ" name="connexion" visibility="public" method="_56LicAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56MwkAXVEfCjiOtTORCvwQ" name="reception" visibility="public" method="_56NXoAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56OlwAXVEfCjiOtTORCvwQ" name="deconnexion" visibility="public" method="_56PM0AXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56RpEAXVEfCjiOtTORCvwQ" name="envoi" visibility="public" method="_56SQIAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56UFUAXVEfCjiOtTORCvwQ" name="constructionMurs" visibility="public" method="_56UsYAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_56WhkAXVEfCjiOtTORCvwQ" name="créeationJoueurs" visibility="public" method="_56YWwAXVEfCjiOtTORCvwQ"/>
+      <packagedElement xmi:type="uml:Package" xmi:id="_1UucIAdHEfCgTrTzVGdCxw" name="javax">
+        <packagedElement xmi:type="uml:Package" xmi:id="_1UucIQdHEfCgTrTzVGdCxw" name="sound">
+          <packagedElement xmi:type="uml:Package" xmi:id="_1UucIgdHEfCgTrTzVGdCxw" name="sampled">
+            <packagedElement xmi:type="uml:Class" xmi:id="_1UvDMAdHEfCgTrTzVGdCxw" name="AudioInputStream"/>
+            <packagedElement xmi:type="uml:Class" xmi:id="_1UxfcAdHEfCgTrTzVGdCxw" name="AudioFileFormat"/>
+            <packagedElement xmi:type="uml:Class" xmi:id="_1U2X8AdHEfCgTrTzVGdCxw" name="AudioFormat"/>
+            <packagedElement xmi:type="uml:Class" xmi:id="_1U40MAdHEfCgTrTzVGdCxw" name="Clip"/>
+          </packagedElement>
+        </packagedElement>
       </packagedElement>
-      <packagedElement xmi:type="uml:Class" xmi:id="_55gNAAXVEfCjiOtTORCvwQ" name="Jeu" visibility="public" isAbstract="true">
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55lskAXVEfCjiOtTORCvwQ" name="envoi" specification="_55lFgAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55hbIAXVEfCjiOtTORCvwQ" name="connexion" visibility="public" isAbstract="true"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55jQUAXVEfCjiOtTORCvwQ" name="reception" visibility="public" isAbstract="true"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55j3YAXVEfCjiOtTORCvwQ" name="deconnexion" visibility="public" isAbstract="true"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55lFgAXVEfCjiOtTORCvwQ" name="envoi" visibility="public" method="_55lskAXVEfCjiOtTORCvwQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_56kkAAXVEfCjiOtTORCvwQ" name="java">
+      <packagedElement xmi:type="uml:Package" xmi:id="_56lLEAXVEfCjiOtTORCvwQ" name="java">
+        <packagedElement xmi:type="uml:Package" xmi:id="_56lyIAXVEfCjiOtTORCvwQ" name="lang">
+          <packagedElement xmi:type="uml:Class" xmi:id="_56mZMAXVEfCjiOtTORCvwQ" name="String"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w8MVoAdHEfCgTrTzVGdCxw" name="Object"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w8nMYAdHEfCgTrTzVGdCxw" name="Thread"/>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_1UqKsAdHEfCgTrTzVGdCxw" name="Runnable"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_1VYjcAdHEfCgTrTzVGdCxw" name="Exception"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_w8sr8AdHEfCgTrTzVGdCxw" name="io">
+          <packagedElement xmi:type="uml:Class" xmi:id="_w8tTAAdHEfCgTrTzVGdCxw" name="ObjectInputStream"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w8xkcAdHEfCgTrTzVGdCxw" name="ObjectOutputStream"/>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_1TiwYAdHEfCgTrTzVGdCxw" name="Serializable"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_1VIEwAdHEfCgTrTzVGdCxw" name="File"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_w8114AdHEfCgTrTzVGdCxw" name="net">
+          <packagedElement xmi:type="uml:Class" xmi:id="_w8114QdHEfCgTrTzVGdCxw" name="Socket"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_w9hyYAdHEfCgTrTzVGdCxw" name="ServerSocket"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_1VBXEQdHEfCgTrTzVGdCxw" name="URL"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_1U-TwAdHEfCgTrTzVGdCxw" name="util">
+          <packagedElement xmi:type="uml:Class" xmi:id="_1U-TwQdHEfCgTrTzVGdCxw" name="Vector"/>
+        </packagedElement>
       </packagedElement>
-      <packagedElement xmi:type="uml:Class" xmi:id="_55ov4AXVEfCjiOtTORCvwQ" name="JeuClient" visibility="public">
-        <generalization xmi:type="uml:Generalization" xmi:id="_55pW8AXVEfCjiOtTORCvwQ" general="_55gNAAXVEfCjiOtTORCvwQ"/>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55wrsAXVEfCjiOtTORCvwQ" name="JeuClient" specification="_55qlEAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_550WEAXVEfCjiOtTORCvwQ" name="connexion" specification="_55zH8AXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_552yUAXVEfCjiOtTORCvwQ" name="reception" specification="_551kMAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_554ngAXVEfCjiOtTORCvwQ" name="envoi" specification="_554AcAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_557q0AXVEfCjiOtTORCvwQ" name="deconnexion" specification="_556csAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-// TODO Auto-generated method stub&#xD;
-</body>
-        </ownedBehavior>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55qlEAXVEfCjiOtTORCvwQ" name="JeuClient" visibility="public" method="_55wrsAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_55zH8AXVEfCjiOtTORCvwQ" name="connexion" visibility="public" method="_550WEAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_551kMAXVEfCjiOtTORCvwQ" name="reception" visibility="public" method="_552yUAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_554AcAXVEfCjiOtTORCvwQ" name="envoi" visibility="public" method="_554ngAXVEfCjiOtTORCvwQ"/>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_556csAXVEfCjiOtTORCvwQ" name="deconnexion" visibility="public" method="_557q0AXVEfCjiOtTORCvwQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_AS_cIAcqEfCWwJ_C7-phrQ" memberEnd="_ATAqQgcqEfCWwJ_C7-phrQ _ATB4YAcqEfCWwJ_C7-phrQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ATAqQAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ATAqQQcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_ATB4YAcqEfCWwJ_C7-phrQ" name="jeuserveur" type="_55PuUAXVEfCjiOtTORCvwQ" association="_AS_cIAcqEfCWwJ_C7-phrQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_DbNxUAcqEfCWwJ_C7-phrQ" memberEnd="_DbOYYgcqEfCWwJ_C7-phrQ _DbO_cAcqEfCWwJ_C7-phrQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_DbOYYAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DbOYYQcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_DbO_cAcqEfCWwJ_C7-phrQ" name="jeuserveur" type="_55PuUAXVEfCjiOtTORCvwQ" association="_DbNxUAcqEfCWwJ_C7-phrQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_Otc6kAcqEfCWwJ_C7-phrQ" memberEnd="_OteIsQcqEfCWwJ_C7-phrQ _OtevwQcqEfCWwJ_C7-phrQ">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_OtdhoAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_OteIsAcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_OtevwQcqEfCWwJ_C7-phrQ" name="joueur" type="_56DmoAXVEfCjiOtTORCvwQ" association="_Otc6kAcqEfCWwJ_C7-phrQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_mXkVwAdGEfCgTrTzVGdCxw" name="controleur">
+      <packageImport xmi:type="uml:PackageImport" xmi:id="_xbU-IAdGEfCgTrTzVGdCxw" importedPackage="_q0l6sAdGEfCgTrTzVGdCxw"/>
+      <packageImport xmi:type="uml:PackageImport" xmi:id="_2M4BkAdGEfCgTrTzVGdCxw" importedPackage="_oEzToAdGEfCgTrTzVGdCxw"/>
+      <packageImport xmi:type="uml:PackageImport" xmi:id="_fmM6MAdHEfCgTrTzVGdCxw" importedPackage="_r-hXMAdGEfCgTrTzVGdCxw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_oEzToAdGEfCgTrTzVGdCxw" name="vue"/>
+    <packagedElement xmi:type="uml:Package" xmi:id="_q0l6sAdGEfCgTrTzVGdCxw" name="outils">
+      <packagedElement xmi:type="uml:Package" xmi:id="_jZMDoAdHEfCgTrTzVGdCxw" name="conexions"/>
+      <packagedElement xmi:type="uml:Package" xmi:id="_j0CMkAdHEfCgTrTzVGdCxw" name="son">
+        <packagedElement xmi:type="uml:Package" xmi:id="_ZXJFAAdJEfCgTrTzVGdCxw" name="Exeptions"/>
+        <packagedElement xmi:type="uml:Package" xmi:id="_ZsuTcAdJEfCgTrTzVGdCxw" name="Ecouteurs"/>
       </packagedElement>
-      <packagedElement xmi:type="uml:Class" xmi:id="_55_VMAXVEfCjiOtTORCvwQ" name="Mur" visibility="public">
-        <generalization xmi:type="uml:Generalization" xmi:id="_57NdMAXVEfCjiOtTORCvwQ" general="_55PHQAXVEfCjiOtTORCvwQ"/>
-        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_57Tj0AXVEfCjiOtTORCvwQ" name="Mur" specification="_57OrUAXVEfCjiOtTORCvwQ">
-          <language>JAVA</language>
-          <body>&#xD;
-</body>
-        </ownedBehavior>
-        <ownedOperation xmi:type="uml:Operation" xmi:id="_57OrUAXVEfCjiOtTORCvwQ" name="Mur" visibility="public" method="_57Tj0AXVEfCjiOtTORCvwQ"/>
-      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_r-hXMAdGEfCgTrTzVGdCxw" name="modèle">
       <packagedElement xmi:type="uml:Class" xmi:id="_56DmoAXVEfCjiOtTORCvwQ" name="Joueur" visibility="public">
         <generalization xmi:type="uml:Generalization" xmi:id="_56cBIAXVEfCjiOtTORCvwQ" general="_55PHQAXVEfCjiOtTORCvwQ"/>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_56fEcAXVEfCjiOtTORCvwQ" name="MAXVIE" visibility="private" isLeaf="true" isStatic="true" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false">
@@ -263,37 +1090,159 @@
         <nestedClassifier xmi:type="uml:PrimitiveType" xmi:id="_O2r2cAcnEfCWwJ_C7-phrQ" name="PrimitiveType33"/>
         <nestedClassifier xmi:type="uml:PrimitiveType" xmi:id="_PF4JAAcnEfCWwJ_C7-phrQ" name="PrimitiveType34"/>
       </packagedElement>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Package" xmi:id="_56dPQAXVEfCjiOtTORCvwQ" name="importedTypes">
-      <packagedElement xmi:type="uml:Package" xmi:id="_56d2UAXVEfCjiOtTORCvwQ" name="primitivetype">
-        <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_56edYAXVEfCjiOtTORCvwQ" name="Integer"/>
-        <packagedElement xmi:type="uml:Class" xmi:id="_57E6UAXVEfCjiOtTORCvwQ" name="Boolean"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_55_VMAXVEfCjiOtTORCvwQ" name="Mur" visibility="public">
+        <generalization xmi:type="uml:Generalization" xmi:id="_57NdMAXVEfCjiOtTORCvwQ" general="_55PHQAXVEfCjiOtTORCvwQ"/>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_57Tj0AXVEfCjiOtTORCvwQ" name="Mur" specification="_57OrUAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_57OrUAXVEfCjiOtTORCvwQ" name="Mur" visibility="public" method="_57Tj0AXVEfCjiOtTORCvwQ"/>
       </packagedElement>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Package" xmi:id="_56kkAAXVEfCjiOtTORCvwQ" name="java">
-      <packagedElement xmi:type="uml:Package" xmi:id="_56lLEAXVEfCjiOtTORCvwQ" name="java">
-        <packagedElement xmi:type="uml:Package" xmi:id="_56lyIAXVEfCjiOtTORCvwQ" name="lang">
-          <packagedElement xmi:type="uml:Class" xmi:id="_56mZMAXVEfCjiOtTORCvwQ" name="String"/>
-        </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_55PuUAXVEfCjiOtTORCvwQ" name="JeuServeur" visibility="public">
+        <generalization xmi:type="uml:Generalization" xmi:id="_55-HEAXVEfCjiOtTORCvwQ" general="_55gNAAXVEfCjiOtTORCvwQ"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_55_8QAXVEfCjiOtTORCvwQ" name="lesMurs" visibility="private" type="_55_VMAXVEfCjiOtTORCvwQ" isUnique="false">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_56BKYAXVEfCjiOtTORCvwQ"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_56BxcAXVEfCjiOtTORCvwQ" value="*"/>
+          <defaultValue xmi:type="uml:OpaqueExpression" xmi:id="_56CYgAXVEfCjiOtTORCvwQ" name="defaultValue">
+            <language>JAVA</language>
+            <body>new ArrayList&lt;Mur>()</body>
+          </defaultValue>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_56ENsAXVEfCjiOtTORCvwQ" name="lesJoueurs" visibility="private" type="_56DmoAXVEfCjiOtTORCvwQ" isUnique="false">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_56Fb0AXVEfCjiOtTORCvwQ"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_56Fb0QXVEfCjiOtTORCvwQ" value="*"/>
+          <defaultValue xmi:type="uml:OpaqueExpression" xmi:id="_56Fb0gXVEfCjiOtTORCvwQ" name="defaultValue">
+            <language>JAVA</language>
+            <body>new ArrayList&lt;Joueur>()</body>
+          </defaultValue>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_ATAqQgcqEfCWwJ_C7-phrQ" name="joueur" type="_56DmoAXVEfCjiOtTORCvwQ" association="_AS_cIAcqEfCWwJ_C7-phrQ">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_ATBRUAcqEfCWwJ_C7-phrQ"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_ATBRUQcqEfCWwJ_C7-phrQ" value="1"/>
+        </ownedAttribute>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_DbOYYgcqEfCWwJ_C7-phrQ" name="mur" type="_55_VMAXVEfCjiOtTORCvwQ" association="_DbNxUAcqEfCWwJ_C7-phrQ">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DbOYYwcqEfCWwJ_C7-phrQ"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DbOYZAcqEfCWwJ_C7-phrQ" value="1"/>
+        </ownedAttribute>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56JGMAXVEfCjiOtTORCvwQ" name="JeuServeur" specification="_56Fb0wXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56LicAXVEfCjiOtTORCvwQ" name="connexion" specification="_56KUUAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56NXoAXVEfCjiOtTORCvwQ" name="reception" specification="_56MwkAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56PM0AXVEfCjiOtTORCvwQ" name="deconnexion" specification="_56OlwAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56SQIAXVEfCjiOtTORCvwQ" name="envoi" specification="_56RpEAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56UsYAXVEfCjiOtTORCvwQ" name="constructionMurs" specification="_56UFUAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_56YWwAXVEfCjiOtTORCvwQ" name="créeationJoueurs" specification="_56WhkAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56Fb0wXVEfCjiOtTORCvwQ" name="JeuServeur" visibility="public" method="_56JGMAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56KUUAXVEfCjiOtTORCvwQ" name="connexion" visibility="public" method="_56LicAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56MwkAXVEfCjiOtTORCvwQ" name="reception" visibility="public" method="_56NXoAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56OlwAXVEfCjiOtTORCvwQ" name="deconnexion" visibility="public" method="_56PM0AXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56RpEAXVEfCjiOtTORCvwQ" name="envoi" visibility="public" method="_56SQIAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56UFUAXVEfCjiOtTORCvwQ" name="constructionMurs" visibility="public" method="_56UsYAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_56WhkAXVEfCjiOtTORCvwQ" name="créeationJoueurs" visibility="public" method="_56YWwAXVEfCjiOtTORCvwQ"/>
       </packagedElement>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Association" xmi:id="_AS_cIAcqEfCWwJ_C7-phrQ" memberEnd="_ATAqQgcqEfCWwJ_C7-phrQ _ATB4YAcqEfCWwJ_C7-phrQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_ATAqQAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_ATAqQQcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
-      </eAnnotations>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_ATB4YAcqEfCWwJ_C7-phrQ" name="jeuserveur" type="_55PuUAXVEfCjiOtTORCvwQ" association="_AS_cIAcqEfCWwJ_C7-phrQ"/>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Association" xmi:id="_DbNxUAcqEfCWwJ_C7-phrQ" memberEnd="_DbOYYgcqEfCWwJ_C7-phrQ _DbO_cAcqEfCWwJ_C7-phrQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_DbOYYAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DbOYYQcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
-      </eAnnotations>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_DbO_cAcqEfCWwJ_C7-phrQ" name="jeuserveur" type="_55PuUAXVEfCjiOtTORCvwQ" association="_DbNxUAcqEfCWwJ_C7-phrQ"/>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Association" xmi:id="_Otc6kAcqEfCWwJ_C7-phrQ" memberEnd="_OteIsQcqEfCWwJ_C7-phrQ _OtevwQcqEfCWwJ_C7-phrQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_OtdhoAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_OteIsAcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
-      </eAnnotations>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_OtevwQcqEfCWwJ_C7-phrQ" name="joueur" type="_56DmoAXVEfCjiOtTORCvwQ" association="_Otc6kAcqEfCWwJ_C7-phrQ"/>
+      <packagedElement xmi:type="uml:Class" xmi:id="_55ov4AXVEfCjiOtTORCvwQ" name="JeuClient" visibility="public">
+        <generalization xmi:type="uml:Generalization" xmi:id="_55pW8AXVEfCjiOtTORCvwQ" general="_55gNAAXVEfCjiOtTORCvwQ"/>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55wrsAXVEfCjiOtTORCvwQ" name="JeuClient" specification="_55qlEAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_550WEAXVEfCjiOtTORCvwQ" name="connexion" specification="_55zH8AXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_552yUAXVEfCjiOtTORCvwQ" name="reception" specification="_551kMAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_554ngAXVEfCjiOtTORCvwQ" name="envoi" specification="_554AcAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_557q0AXVEfCjiOtTORCvwQ" name="deconnexion" specification="_556csAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+// TODO Auto-generated method stub&#xD;
+</body>
+        </ownedBehavior>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55qlEAXVEfCjiOtTORCvwQ" name="JeuClient" visibility="public" method="_55wrsAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55zH8AXVEfCjiOtTORCvwQ" name="connexion" visibility="public" method="_550WEAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_551kMAXVEfCjiOtTORCvwQ" name="reception" visibility="public" method="_552yUAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_554AcAXVEfCjiOtTORCvwQ" name="envoi" visibility="public" method="_554ngAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_556csAXVEfCjiOtTORCvwQ" name="deconnexion" visibility="public" method="_557q0AXVEfCjiOtTORCvwQ"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_55gNAAXVEfCjiOtTORCvwQ" name="Jeu" visibility="public" isAbstract="true">
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55lskAXVEfCjiOtTORCvwQ" name="envoi" specification="_55lFgAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55hbIAXVEfCjiOtTORCvwQ" name="connexion" visibility="public" isAbstract="true"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55jQUAXVEfCjiOtTORCvwQ" name="reception" visibility="public" isAbstract="true"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55j3YAXVEfCjiOtTORCvwQ" name="deconnexion" visibility="public" isAbstract="true"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55lFgAXVEfCjiOtTORCvwQ" name="envoi" visibility="public" method="_55lskAXVEfCjiOtTORCvwQ"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_55PHQAXVEfCjiOtTORCvwQ" name="Objet" visibility="public" isAbstract="true">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_57aRgAXVEfCjiOtTORCvwQ" name="posX" visibility="protected" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_57cGsAXVEfCjiOtTORCvwQ" name="posY" visibility="protected" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_57gYIAXVEfCjiOtTORCvwQ" name="toucheObjet" specification="_57d74AXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+    return null;&#xD;
+</body>
+        </ownedBehavior>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_57d74AXVEfCjiOtTORCvwQ" name="toucheObjet" visibility="public" method="_57gYIAXVEfCjiOtTORCvwQ">
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_57ei8AXVEfCjiOtTORCvwQ" type="_57E6UAXVEfCjiOtTORCvwQ" direction="return"/>
+          <ownedParameter xmi:type="uml:Parameter" xmi:id="_57fxEAXVEfCjiOtTORCvwQ" name="objet" type="_55PHQAXVEfCjiOtTORCvwQ"/>
+        </ownedOperation>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_55NSEAXVEfCjiOtTORCvwQ" name="Boule" visibility="public">
+        <generalization xmi:type="uml:Generalization" xmi:id="_55PHQQXVEfCjiOtTORCvwQ" general="_55PHQAXVEfCjiOtTORCvwQ"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_55QVYAXVEfCjiOtTORCvwQ" name="jeuServeur" visibility="private" type="_55PuUAXVEfCjiOtTORCvwQ" isUnique="false"/>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55atcAXVEfCjiOtTORCvwQ" name="Boule" specification="_55QVYQXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55eX0AXVEfCjiOtTORCvwQ" name="tireBoule" specification="_55dwwAXVEfCjiOtTORCvwQ">
+          <language>JAVA</language>
+          <body>&#xD;
+</body>
+        </ownedBehavior>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55QVYQXVEfCjiOtTORCvwQ" name="Boule" visibility="public" method="_55atcAXVEfCjiOtTORCvwQ"/>
+        <ownedOperation xmi:type="uml:Operation" xmi:id="_55dwwAXVEfCjiOtTORCvwQ" name="tireBoule" visibility="public" method="_55eX0AXVEfCjiOtTORCvwQ"/>
+      </packagedElement>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_55JAoAXVEfCjiOtTORCvwQ">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_55JAoQXVEfCjiOtTORCvwQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
@@ -322,4 +1271,42 @@
   <Codegen:External xmi:id="_57HWkAXVEfCjiOtTORCvwQ" name="primitivetype.Boolean" base_Classifier="_57E6UAXVEfCjiOtTORCvwQ"/>
   <standard:Create xmi:id="_57RHkAXVEfCjiOtTORCvwQ" base_BehavioralFeature="_57OrUAXVEfCjiOtTORCvwQ"/>
   <Codegen:External xmi:id="_57YcUAXVEfCjiOtTORCvwQ" name="primitivetype.Integer" base_Classifier="_56edYAXVEfCjiOtTORCvwQ"/>
+  <Codegen:External xmi:id="_w8ScQAdHEfCgTrTzVGdCxw" name="java.lang.Object" base_Classifier="_w8MVoAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_w8qPsAdHEfCgTrTzVGdCxw" name="java.lang.Thread" base_Classifier="_w8nMYAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_w8vIMAdHEfCgTrTzVGdCxw" name="java.io.ObjectInputStream" base_Classifier="_w8tTAAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_w80AsAdHEfCgTrTzVGdCxw" name="java.io.ObjectOutputStream" base_Classifier="_w8xkcAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_w83EAAdHEfCgTrTzVGdCxw" name="java.net.Socket" base_Classifier="_w8114QdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_w86HUAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_w84SIAdHEfCgTrTzVGdCxw"/>
+  <PapyrusJava:Synchronized xmi:id="_w9CqMAdHEfCgTrTzVGdCxw" base_Operation="_w8_m4AdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_w9brwAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_w9Z2kAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_w9jnkAdHEfCgTrTzVGdCxw" name="java.net.ServerSocket" base_Classifier="_w9hyYAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_w9n5AAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_w9mq4AdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1TklkAdHEfCgTrTzVGdCxw" name="java.io.Serializable" base_Classifier="_1TiwYAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1TyoAAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1Twy0QdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1T4uoAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1T1rUAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1T9AEAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1T7x8AdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1UBRgAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1UADYAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1UFi8AdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1UEU0QdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1UKbcAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1UJNUAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1UQiEAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1UPT8AdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1UrY0AdHEfCgTrTzVGdCxw" name="java.lang.Runnable" base_Classifier="_1UqKsAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1UwRUAdHEfCgTrTzVGdCxw" name="javax.sound.sampled.AudioInputStream" base_Classifier="_1UvDMAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1UytkAdHEfCgTrTzVGdCxw" name="javax.sound.sampled.AudioFileFormat" base_Classifier="_1UxfcAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1U3mEAdHEfCgTrTzVGdCxw" name="javax.sound.sampled.AudioFormat" base_Classifier="_1U2X8AdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1U6pYAdHEfCgTrTzVGdCxw" name="javax.sound.sampled.Clip" base_Classifier="_1U40MAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1U_h4AdHEfCgTrTzVGdCxw" name="java.util.Vector" base_Classifier="_1U-TwQdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1VClMAdHEfCgTrTzVGdCxw" name="java.net.URL" base_Classifier="_1VBXEQdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1VEaYAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1VDzUAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1VJS4AdHEfCgTrTzVGdCxw" name="java.io.File" base_Classifier="_1VIEwAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1VLvIAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1VLIEAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_1VZxkAdHEfCgTrTzVGdCxw" name="java.lang.Exception" base_Classifier="_1VYjcAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_1VyMEAdHEfCgTrTzVGdCxw" base_BehavioralFeature="_1VxlAAdHEfCgTrTzVGdCxw"/>
+  <Codegen:External xmi:id="_egxRQAdJEfCgTrTzVGdCxw" name="outils.son.Sound" base_Classifier="_1UnucAdHEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWR88AdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWNEcAdJEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWZRsAdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWYqoAdJEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWexQAdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWdjIAdJEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWh0kAdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWhNgAdJEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWmtEAdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWk34AdJEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWrlkAdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWq-gAdJEfCgTrTzVGdCxw"/>
+  <standard:Create xmi:id="_fWweEAdJEfCgTrTzVGdCxw" base_BehavioralFeature="_fWv3AAdJEfCgTrTzVGdCxw"/>
 </xmi:XMI>
