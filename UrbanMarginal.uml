@@ -965,13 +965,7 @@
       </eAnnotations>
       <ownedEnd xmi:type="uml:Property" xmi:id="_DbO_cAcqEfCWwJ_C7-phrQ" name="jeuserveur" type="_55PuUAXVEfCjiOtTORCvwQ" association="_DbNxUAcqEfCWwJ_C7-phrQ"/>
     </packagedElement>
-    <packagedElement xmi:type="uml:Association" xmi:id="_Otc6kAcqEfCWwJ_C7-phrQ" memberEnd="_OteIsQcqEfCWwJ_C7-phrQ _OtevwQcqEfCWwJ_C7-phrQ">
-      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_OtdhoAcqEfCWwJ_C7-phrQ" source="org.eclipse.papyrus">
-        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_OteIsAcqEfCWwJ_C7-phrQ" key="nature" value="UML_Nature"/>
-      </eAnnotations>
-      <ownedEnd xmi:type="uml:Property" xmi:id="_OtevwQcqEfCWwJ_C7-phrQ" name="joueur" type="_56DmoAXVEfCjiOtTORCvwQ" association="_Otc6kAcqEfCWwJ_C7-phrQ"/>
-    </packagedElement>
-    <packagedElement xmi:type="uml:Package" xmi:id="_mXkVwAdGEfCgTrTzVGdCxw" name="controleur">
+    <packagedElement xmi:type="uml:Package" xmi:id="_mXkVwAdGEfCgTrTzVGdCxw" name="controleur" visibility="package">
       <packageImport xmi:type="uml:PackageImport" xmi:id="_xbU-IAdGEfCgTrTzVGdCxw" importedPackage="_q0l6sAdGEfCgTrTzVGdCxw"/>
       <packageImport xmi:type="uml:PackageImport" xmi:id="_2M4BkAdGEfCgTrTzVGdCxw" importedPackage="_oEzToAdGEfCgTrTzVGdCxw"/>
       <packageImport xmi:type="uml:PackageImport" xmi:id="_fmM6MAdHEfCgTrTzVGdCxw" importedPackage="_r-hXMAdGEfCgTrTzVGdCxw"/>
@@ -1010,9 +1004,9 @@
         <ownedAttribute xmi:type="uml:Property" xmi:id="_56uVAAXVEfCjiOtTORCvwQ" name="jeuServeur" visibility="private" type="_55PuUAXVEfCjiOtTORCvwQ" isUnique="false"/>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_56wKMAXVEfCjiOtTORCvwQ" name="etape" visibility="private" type="_56edYAXVEfCjiOtTORCvwQ" isUnique="false"/>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_56xYUAXVEfCjiOtTORCvwQ" name="boule" visibility="private" type="_55NSEAXVEfCjiOtTORCvwQ" isUnique="false"/>
-        <ownedAttribute xmi:type="uml:Property" xmi:id="_OteIsQcqEfCWwJ_C7-phrQ" name="boule" type="_55NSEAXVEfCjiOtTORCvwQ" association="_Otc6kAcqEfCWwJ_C7-phrQ">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_OteIsgcqEfCWwJ_C7-phrQ"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_OtevwAcqEfCWwJ_C7-phrQ" value="1"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_Jvd4MQfbEfCFYe1kg4VRog" name="boule" type="_55NSEAXVEfCjiOtTORCvwQ" association="_Jvbb8AfbEfCFYe1kg4VRog">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_JvefQAfbEfCFYe1kg4VRog"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_JvefQQfbEfCFYe1kg4VRog" value="1"/>
         </ownedAttribute>
         <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_562Q0AXVEfCjiOtTORCvwQ" name="Joueur" specification="_56ymcAXVEfCjiOtTORCvwQ">
           <language>JAVA</language>
@@ -1230,6 +1224,10 @@
       <packagedElement xmi:type="uml:Class" xmi:id="_55NSEAXVEfCjiOtTORCvwQ" name="Boule" visibility="public">
         <generalization xmi:type="uml:Generalization" xmi:id="_55PHQQXVEfCjiOtTORCvwQ" general="_55PHQAXVEfCjiOtTORCvwQ"/>
         <ownedAttribute xmi:type="uml:Property" xmi:id="_55QVYAXVEfCjiOtTORCvwQ" name="jeuServeur" visibility="private" type="_55PuUAXVEfCjiOtTORCvwQ" isUnique="false"/>
+        <ownedAttribute xmi:type="uml:Property" xmi:id="_DMbB8AfbEfCFYe1kg4VRog" name="jeuserveur" type="_55PuUAXVEfCjiOtTORCvwQ" association="_DMTGIAfbEfCFYe1kg4VRog">
+          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_DMbpAAfbEfCFYe1kg4VRog"/>
+          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_DMcQEAfbEfCFYe1kg4VRog" value="1"/>
+        </ownedAttribute>
         <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_55atcAXVEfCjiOtTORCvwQ" name="Boule" specification="_55QVYQXVEfCjiOtTORCvwQ">
           <language>JAVA</language>
           <body>&#xD;
@@ -1243,6 +1241,18 @@
         <ownedOperation xmi:type="uml:Operation" xmi:id="_55QVYQXVEfCjiOtTORCvwQ" name="Boule" visibility="public" method="_55atcAXVEfCjiOtTORCvwQ"/>
         <ownedOperation xmi:type="uml:Operation" xmi:id="_55dwwAXVEfCjiOtTORCvwQ" name="tireBoule" visibility="public" method="_55eX0AXVEfCjiOtTORCvwQ"/>
       </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_DMTGIAfbEfCFYe1kg4VRog" memberEnd="_DMbB8AfbEfCFYe1kg4VRog _DMdeMAfbEfCFYe1kg4VRog">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_DMZz0AfbEfCFYe1kg4VRog" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_DMZz0QfbEfCFYe1kg4VRog" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_DMdeMAfbEfCFYe1kg4VRog" name="boule" type="_55NSEAXVEfCjiOtTORCvwQ" association="_DMTGIAfbEfCFYe1kg4VRog"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_Jvbb8AfbEfCFYe1kg4VRog" memberEnd="_Jvd4MQfbEfCFYe1kg4VRog _JvfGUAfbEfCFYe1kg4VRog">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_JvdRIAfbEfCFYe1kg4VRog" source="org.eclipse.papyrus">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_Jvd4MAfbEfCFYe1kg4VRog" key="nature" value="UML_Nature"/>
+      </eAnnotations>
+      <ownedEnd xmi:type="uml:Property" xmi:id="_JvfGUAfbEfCFYe1kg4VRog" name="joueur" type="_56DmoAXVEfCjiOtTORCvwQ" association="_Jvbb8AfbEfCFYe1kg4VRog"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_55JAoAXVEfCjiOtTORCvwQ">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_55JAoQXVEfCjiOtTORCvwQ" source="http://www.eclipse.org/uml2/2.0.0/UML">
